@@ -2,20 +2,29 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.Random;
 
 public class PongGame extends JPanel implements MouseMotionListener {
     static final int WINDOW_WIDTH = 640, WINDOW_HEIGHT = 480;
     private Ball gameBall;
     private Paddle userPaddle, pcPaddle;
+    Random random = new Random();
 
     private int userScore, pcScore, bounceCount, speedBounce;
 
     private int userMouseY;
 
     public PongGame() {
-        gameBall = new Ball(300, 200,3,3,3, 10, Color.YELLOW);
+        int initialSide = random.nextInt(2);
+
+        if (initialSide == 1) {
+            gameBall = new Ball(300, 200,3,3,3, 10, Color.YELLOW);
+        } else {
+            gameBall = new Ball(300, 200,-3,-3,3, 10, Color.YELLOW);
+        }
+
         userPaddle = new Paddle(10, 200, 75, 3, Color.BLUE);
-        pcPaddle = new Paddle(610, 200, 75, 3, Color.RED);
+        pcPaddle = new Paddle(610, 200, 75, 4, Color.RED);
         bounceCount = 0;
         speedBounce = 0;
 
@@ -49,7 +58,7 @@ public class PongGame extends JPanel implements MouseMotionListener {
         pcPaddle.paint(g);
 
         g.setColor(Color.WHITE);
-        g.drawString("Score - User [" + userScore + "] PC [" + pcScore + "] | Bounces: " + bounceCount + " | Speed: " + gameBall.getSpeed(), 250, 20);
+        g.drawString("Score - User [" + userScore + "] PC [" + pcScore + "] | Bounces: " + bounceCount + " | Speed: " + gameBall.getSpeed(), 200, 20);
     }
 
     public void gameLogic() {
@@ -78,14 +87,23 @@ public class PongGame extends JPanel implements MouseMotionListener {
         if (gameBall.getX() < 0) {
             pcScore++;
             reset();
-        } else if (gameBall.getX() >= WINDOW_WIDTH - 7) {
+        } else if (gameBall.getX() >= WINDOW_WIDTH - 10) {
             userScore++;
             reset();
         }
     }
 
     public void reset() {
-        gameBall.setX(300);
+        int initialSide = random.nextInt(2);
+
+        if (initialSide == 1) {
+            gameBall.setCx(3);
+            gameBall.setCy(3);
+        } else {
+            gameBall.setCx(-3);
+            gameBall.setCy(-3);
+        }
+        gameBall.setX(350);
         gameBall.setY(200);
         gameBall.setCx(3);
         gameBall.setCy(3);
